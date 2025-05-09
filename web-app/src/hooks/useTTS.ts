@@ -8,7 +8,7 @@ const useTTS = () => {
 
     const speak = async (text: string) => {
         const speech = await callSpeak(text)
-        const audioUrl = URL.createObjectURL(speech.data)
+        const audioUrl = URL.createObjectURL(speech)
         audio.src = audioUrl
         audio.play();
         return audio

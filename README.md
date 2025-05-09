@@ -16,7 +16,7 @@ QR Payment Verifier là một dự án lấy cảm hứng từ các thiết bị
 
 ### 1. Khởi tạo cơ sở dữ liệu
 - Sử dụng MySQL
-- Chạy file SQL có sẵn: qr-payment-verifier.sql
+- Chạy file SQL có sẵn: `qr-payment-verifier.sql`
 
 ### 2. Tạo file TTS credentials
 - Đổi tên file `credentials.json` tải từ Google thành `tts-credentials.json`

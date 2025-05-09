@@ -4,9 +4,8 @@ import com.qrpaymentverifier.dto.response.SePayTransactionResponse;
 import com.qrpaymentverifier.entity.Transaction;
 import org.springframework.stereotype.Component;
 
-@Component
 public class TransactionMapper {
-    public Transaction toEntity(SePayTransactionResponse dto) {
+    public static Transaction toEntity(SePayTransactionResponse dto) {
         return Transaction.builder()
                 .id(dto.getId())
                 .bankBrandName(dto.getBankBrandName())

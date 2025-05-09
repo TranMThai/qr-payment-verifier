@@ -3,34 +3,28 @@ import { useEffect, useState } from "react";
 import SockJS from 'sockjs-client';
 import useTTS from "./hooks/useTTS";
 import type { Transaction } from "./types/transaction";
+import BankQR from "./components/bank-qr";
+import useSocket from "./hooks/useSocket";
+import { NOTIFICATION_SOCKET } from "./api/base_api";
 
 function App() {
 
   const { speak } = useTTS()
+  const { connectSocket } = useSocket()
   const [pendingNotifyTransactions, setPendingNotifyTransactions] = useState<Transaction[]>([])
 
   useEffect(() => {
-    const socket = new SockJS('http://localhost:8080/ws/notification');
-    const stompClient = new Client({
-      webSocketFactory: () => socket,
-      reconnectDelay: 2000,
-    });
+    
+    const action = (message: any) => {
+      const data: Transaction[] = JSON.parse(message.body);
+      console.log(data);
+      
+      if (data.length > 0) {
+        setPendingNotifyTransactions(prev => [...prev, ...data])
+      }
+    }
 
-    stompClient.onConnect = () => {
-      console.log('✅ Đã kết nối WebSocket');
-      stompClient.subscribe('/notification', (message) => {
-        const data: Transaction[] = JSON.parse(message.body);
-        if (data.length > 0) {
-          setPendingNotifyTransactions(prev => [...prev, ...data])
-        }
-      });
-    };
-
-    stompClient.onStompError = (frame) => {
-      console.error('❌ Lỗi', frame);
-    };
-
-    stompClient.activate();
+    const stompClient = connectSocket(NOTIFICATION_SOCKET, '/notification', action)
 
     return () => {
       stompClient.deactivate();
@@ -64,6 +58,7 @@ function App() {
   return (
     <>
       <h1>Trang nhận thông báo thanh toán</h1>
+      <BankQR />
       <button onClick={speakTest}>Test</button>
       <button id="startSpeaking">bắt đầu nói</button>
     </>

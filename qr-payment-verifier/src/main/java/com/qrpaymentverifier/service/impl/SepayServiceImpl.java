@@ -1,10 +1,15 @@
 package com.qrpaymentverifier.service.impl;
 
+import com.qrpaymentverifier.config.TransactionSyncScheduler;
+import com.qrpaymentverifier.dto.response.BankAccountResponse;
+import com.qrpaymentverifier.dto.response.SePayBankAccountResponse;
 import com.qrpaymentverifier.dto.response.SePayTransactionResponse;
+import com.qrpaymentverifier.mapper.BankAccountMapper;
 import com.qrpaymentverifier.repository.TransactionRepository;
 import com.qrpaymentverifier.repository.httpclient.SePayClient;
 import com.qrpaymentverifier.service.SePayService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +22,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SepayServiceImpl implements SePayService {
 
     @Value("${sepay.token}")
@@ -36,6 +42,35 @@ public class SepayServiceImpl implements SePayService {
             minTime = transaction.getTransactionDate();
         });
         return transactions;
+    }
+
+    @Override
+    public BankAccountResponse getBankAccount() {
+        Map<String,String> params = new HashMap<>();
+        params.put("limit", "1");
+        TransactionSyncScheduler.stopScheduled();
+        List<SePayBankAccountResponse> bankAccounts = null;
+        for(int i = 1; i<=5; i++){
+            try{
+                bankAccounts = sePayClient.getBankAccountList(sePayToken,params).getBankaccounts();
+            }
+            catch (Exception e){
+                log.warn("Retry");
+            }
+            if(bankAccounts != null) {
+                break;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                //TODO: throw exception
+            }
+        }
+        TransactionSyncScheduler.continueScheduled();
+        if(bankAccounts == null || bankAccounts.isEmpty()) {
+            //TODO: throw exception
+        }
+        return BankAccountMapper.toBankAccountResponse(bankAccounts.getFirst());
     }
 
     private String getMinTime() {

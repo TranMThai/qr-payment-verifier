@@ -20,14 +20,13 @@ import java.util.Optional;
 public class TransactionServiceImpl implements TransactionService {
     private final SePayService sePayService;
     private final WebSocketService webSocketService;
-    private final TransactionMapper transactionMapper;
     private final TransactionRepository transactionRepository;
 
     @Override
     public List<Transaction> syncTransactions() {
 
         List<Transaction> newSePayTransaction = sePayService.getSepayTransactions().stream()
-                .map(transactionMapper::toEntity)
+                .map(TransactionMapper::toEntity)
                 .toList();
 
         List<Transaction> transactions = newSePayTransaction.stream()
