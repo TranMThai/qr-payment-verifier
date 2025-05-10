@@ -55,13 +55,13 @@ public class SepayServiceImpl implements SePayService {
                 bankAccounts = sePayClient.getBankAccountList(sePayToken,params).getBankaccounts();
             }
             catch (Exception e){
-                log.warn("Retry");
+                log.warn("Retry request api");
             }
             if(bankAccounts != null) {
                 break;
             }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 //TODO: throw exception
             }

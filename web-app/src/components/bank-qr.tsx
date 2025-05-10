@@ -14,7 +14,9 @@ const BankQR = () => {
     }, [])
 
     return (
-        <img src={qrUrl} alt=""/>
+        <div style={{ width: 500, height: 700 }}>
+            <img src={qrUrl} alt="" width="100%"/>
+        </div>
     )
 }
 
