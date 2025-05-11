@@ -1,5 +1,5 @@
 package com.qrpaymentverifier.service;
 
 public interface TextToSpeechService {
-    byte[] synthesizeToBytes(String text) throws Exception;
+    byte[] synthesizeToBytes(String text);
 }

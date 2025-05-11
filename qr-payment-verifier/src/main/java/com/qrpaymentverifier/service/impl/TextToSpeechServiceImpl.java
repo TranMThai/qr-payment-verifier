@@ -32,7 +32,7 @@ public class TextToSpeechServiceImpl implements TextToSpeechService {
     private final TextToSpeechClient ttsClient;
 
     @Override
-    public byte[] synthesizeToBytes(String text) throws Exception {
+    public byte[] synthesizeToBytes(String text) {
         SynthesisInput input = SynthesisInput.newBuilder().setText(text).build();
 
         VoiceSelectionParams voice = VoiceSelectionParams.newBuilder()

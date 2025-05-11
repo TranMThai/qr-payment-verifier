@@ -1,10 +1,11 @@
 package com.qrpaymentverifier.mapper;
 
 import com.qrpaymentverifier.dto.response.SePayTransactionResponse;
+import com.qrpaymentverifier.dto.response.TransactionResponse;
 import com.qrpaymentverifier.entity.Transaction;
-import org.springframework.stereotype.Component;
 
 public class TransactionMapper {
+
     public static Transaction toEntity(SePayTransactionResponse dto) {
         return Transaction.builder()
                 .id(dto.getId())
@@ -20,6 +21,14 @@ public class TransactionMapper {
                 .subAccount(dto.getSubAccount())
                 .bankAccountId(dto.getBankAccountId())
                 .isRead(false)
+                .build();
+    }
+
+    public static TransactionResponse toDto(Transaction entity, byte[] speech) {
+        return TransactionResponse.builder()
+                .id(entity.getId())
+                .amountIn(entity.getAmountIn())
+                .speech(speech)
                 .build();
     }
 }
