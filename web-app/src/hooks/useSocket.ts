@@ -7,7 +7,7 @@ const useSocket = () => {
         topic: string,
         action: (message: any) => void
     ) => {
-        const socket = new SockJS(endpoint);
+        const socket = new SockJS(endpoint, null, {});
         const stompClient = new Client({
             webSocketFactory: () => socket,
             reconnectDelay: 2000,

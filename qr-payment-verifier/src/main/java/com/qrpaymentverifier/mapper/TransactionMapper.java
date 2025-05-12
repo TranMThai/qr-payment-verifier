@@ -28,6 +28,7 @@ public class TransactionMapper {
         return TransactionResponse.builder()
                 .id(entity.getId())
                 .amountIn(entity.getAmountIn())
+                .transactionDate(entity.getTransactionDate())
                 .speech(speech)
                 .build();
     }

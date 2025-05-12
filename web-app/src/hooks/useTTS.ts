@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { callSpeak } from '../api/tts-api';
 import sound from '../assets/prefix-sound.wav'
+import { base64ToBlob } from '../utils/file-converter-utils';
 
 
 const useTTS = () => {
 
     const [audio, _] = useState<HTMLAudioElement>(new Audio())
     const [prefixSound, setPrefixSound] = useState<HTMLAudioElement | null>(null)
+
+    useEffect(() => {
+        audio.onpause = () => { }
+    }, [])
 
     const waitForAudioToEnd = (audio: HTMLAudioElement): Promise<void> => {
         return new Promise((resolve) => {
@@ -34,33 +39,27 @@ const useTTS = () => {
         await waitForAudioToEnd(sound)
     }
 
-    const speak = async (text: string) => {
-        const speech = await callSpeak(text)
-        const audioUrl = URL.createObjectURL(speech)
-        audio.src = audioUrl
-        await playPrefixSound()
-        audio.play();
-        return audio
-    }
-
-    const speakByByte = async (text: string) => {
-        const binaryString = window.atob(text);
-        const len = binaryString.length;
-        const bytes = new Uint8Array(len);
-
-        for (let i = 0; i < len; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-        }
-        const blob = new Blob([bytes], { type: "audio/wav" });
+    const playSound = async (blob: Blob) => {
         const audioUrl = URL.createObjectURL(blob);
-
         audio.src = audioUrl
         await playPrefixSound()
         audio.play();
         return audio
     }
 
-    return { speak, speakByByte, waitForAudioToEnd }
+    const speak = async (text: string) => {
+        const blob = await callSpeak(text)
+        const audio = await playSound(blob)
+        return audio
+    }
+
+    const speakByByte = async (base64: string) => {
+        const blob = base64ToBlob(base64)
+        const audio = await playSound(blob)
+        return audio
+    }
+
+    return { audio, speak, speakByByte, waitForAudioToEnd }
 }
 
 export default useTTS

@@ -1,6 +1,7 @@
 export type Transaction = {
     id: string;
     amountIn: number;
-    speech: string;
+    speech?: string;
+    transactionDate: Date
   };
   
