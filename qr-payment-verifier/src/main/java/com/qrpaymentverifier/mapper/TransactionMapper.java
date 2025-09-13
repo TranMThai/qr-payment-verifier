@@ -24,7 +24,7 @@ public class TransactionMapper {
                 .build();
     }
 
-    public static TransactionResponse toDto(Transaction entity, byte[] speech) {
+    public static TransactionResponse toDto(Transaction entity, String speech) {
         return TransactionResponse.builder()
                 .id(entity.getId())
                 .amountIn(entity.getAmountIn())

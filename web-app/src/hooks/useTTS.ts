@@ -53,13 +53,13 @@ const useTTS = () => {
         return audio
     }
 
-    const speakByByte = async (base64: string) => {
+    const speakByBase64 = async (base64: string) => {
         const blob = base64ToBlob(base64)
         const audio = await playSound(blob)
         return audio
     }
 
-    return { audio, speak, speakByByte, waitForAudioToEnd }
+    return { audio, speak, speakByBase64, waitForAudioToEnd }
 }
 
 export default useTTS

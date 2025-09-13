@@ -14,7 +14,7 @@ public class TransactionResponse {
 
     private BigDecimal amountIn;
 
-    private byte[] speech;
+    private String speech;
 
     private LocalDateTime transactionDate;
 

@@ -5,12 +5,11 @@ interface IProps {
     transactions: Transaction[]
 }
 
-const History: React.FC<IProps> = ({transactions}) => {
+const History: React.FC<IProps> = ({ transactions }) => {
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log(transactions);
-        
-    },[transactions])
+    }, [transactions])
 
     return (
         <div className="bg-white shadow rounded-2xl py-6 w-full md:w-1/2 my-5 max-h-[95vh] flex flex-col">
@@ -19,9 +18,9 @@ const History: React.FC<IProps> = ({transactions}) => {
             </h2>
             <div className="overflow-y-auto flex-1">
                 <ul className="space-y-4 px-6">
-                    {transactions.map((trans) => (
+                    {[...transactions].reverse().map((trans,index) => (
                         <li
-                            key={trans.id}
+                            key={index}
                             className="flex items-center justify-between bg-gray-50 p-4 rounded-xl shadow-sm hover:bg-gray-100 transition"
                         >
                             <div className="flex items-center gap-3">
@@ -29,7 +28,7 @@ const History: React.FC<IProps> = ({transactions}) => {
                                     #{trans.id}
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-500">Thời gian: {trans.transactionDate.toDateString()}</p>
+                                    <p className="text-sm text-gray-500">Thời gian: {trans.transactionDate.toLocaleTimeString("vi-VN")} | {trans.transactionDate.toLocaleDateString("vi-VN")}</p>
                                 </div>
                             </div>
                             <p className="text-lg font-semibold text-green-600">

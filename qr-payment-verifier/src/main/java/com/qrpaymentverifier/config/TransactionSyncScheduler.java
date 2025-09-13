@@ -12,7 +12,7 @@ public class TransactionSyncScheduler {
     private final TransactionService transactionService;
     private static volatile boolean continueScheduled = true;
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 5000)
     public void syncTransactions() throws InterruptedException {
         if(!continueScheduled) {
             Thread.sleep(1000);

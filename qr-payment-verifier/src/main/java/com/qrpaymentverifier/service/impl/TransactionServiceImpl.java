@@ -12,15 +12,18 @@ import com.qrpaymentverifier.service.TransactionService;
 import com.qrpaymentverifier.service.WebSocketService;
 import com.qrpaymentverifier.util.MoneyUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TransactionServiceImpl implements TransactionService {
     private final SePayService sePayService;
     private final TextToSpeechService textToSpeechService;
@@ -44,7 +47,7 @@ public class TransactionServiceImpl implements TransactionService {
         List<TransactionResponse> responses = transactions.stream()
                 .map(entity -> {
                     Number amountIn = MoneyUtils.normalizeDecimal(entity.getAmountIn());
-                    byte[] speech = textToSpeechService.synthesizeToBytes("Thanh toán thành công "+amountIn+" đồng");
+                    String speech = Base64.getEncoder().encodeToString(textToSpeechService.synthesizeToBytes("Bạn đã nhận được " + amountIn + " đồng"));
                     return TransactionMapper.toDto(entity, speech);
                 })
                 .toList();
