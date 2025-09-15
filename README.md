@@ -22,7 +22,15 @@ QR Payment Verifier là một dự án lấy cảm hứng từ các thiết bị
 - Đổi tên file `credentials.json` tải từ Google thành `tts-credentials.json`
 - Đặt vào thư mục: `qr-payment-verifier/src/main/resources/credentials`
 
-### 3. Cấu hình file `application.properties`
+### 3. Public server với Ngrok để sử dụng Sepay webhook (KHÔNG BẮT BUỘC)
+- Cài đặt [Ngrok](https://ngrok.com/) và đăng nhập
+- Vào trang [Domain](https://dashboard.ngrok.com/domains) và tạo domain riêng
+- Copy đoạn start endpoint Ngrok và sửa lại port thành 8080
+- Mở terminal và chạy lệnh để tạo tunnel
+- Truy cập [Sepay Webhook Doc](https://docs.sepay.vn/tich-hop-webhooks.html) và làm theo 4 bước đăng ký webhook
+- Điền url vừa tạo ở Ngrok và sửa lại thành https://<yourdomain>.ngrok-free.app/api/hooks/sepay-payment
+
+### 4. Cấu hình file `application.properties`
 - Mở file `application.properties`
 - Sửa thông tin kêt nối MySQL và Token API của SePay
 
@@ -30,6 +38,7 @@ QR Payment Verifier là một dự án lấy cảm hứng từ các thiết bị
 ## 📦 Công nghệ sử dụng
 
 - **Backend:** Spring Boot, WebSocket, MySQL
-- **Frontend:** React, TypeScript, STOMP over SockJS
+- **Frontend:** React, TypeScript
 - **TTS:** Google Cloud Text-to-Speech
-- **API thanh toán:** Sepay.vn
+- **API thanh toán:** Sepay
+- **Tunnel:** Ngrok
