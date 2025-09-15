@@ -28,7 +28,7 @@ QR Payment Verifier là một dự án lấy cảm hứng từ các thiết bị
 - Copy đoạn start endpoint Ngrok và sửa lại port thành 8080
 - Mở terminal và chạy lệnh để tạo tunnel
 - Truy cập [Sepay Webhook Doc](https://docs.sepay.vn/tich-hop-webhooks.html) và làm theo 4 bước đăng ký webhook
-- Điền url vừa tạo ở Ngrok và sửa lại thành https://<yourdomain>.ngrok-free.app/api/hooks/sepay-payment
+- Điền URL vừa tạo ở Ngrok và sửa lại thành `https://<yourdomain>.ngrok-free.app/api/hooks/sepay-payment`
 
 ### 4. Cấu hình file `application.properties`
 - Mở file `application.properties`
