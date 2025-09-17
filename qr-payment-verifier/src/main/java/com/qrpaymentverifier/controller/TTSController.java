@@ -24,7 +24,7 @@ public class TTSController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"speech.wav\"");
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"speech.mp3\"");
 
         return new ResponseEntity<>(audioBytes, headers, HttpStatus.OK);
     }

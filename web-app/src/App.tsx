@@ -20,6 +20,7 @@ function App() {
     const action = (message: any) => {
 
       const data: Transaction[] = JSON.parse(message.body);
+      console.log(data);
 
       if (data.length > 0) {
         data.forEach(transaction => {

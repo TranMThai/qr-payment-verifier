@@ -6,7 +6,7 @@ public class MoneyUtils {
     public static Number normalizeDecimal(BigDecimal amount) {
        Double number = amount.doubleValue();
        if(number%1==0){
-           return number.intValue();
+           return number.longValue();
        }
        return number;
     }

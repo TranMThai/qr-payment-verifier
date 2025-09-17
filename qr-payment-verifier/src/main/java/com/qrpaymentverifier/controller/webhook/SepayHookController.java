@@ -15,18 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SepayHookController {
 
-    @Value("${sepay.api-key}")
+    @Value("${sepay.api-key:}")
     private String apiKey;
 
     private final TransactionService transactionService;
 
     @PostMapping
     public void receiveTransaction(@RequestBody SepayTransactionRequest request,
-                                    @RequestHeader("Authorization") String authHeader) {
-        authHeader = authHeader.replace("Apikey ", "");
-        if(apiKey.equals("")||apiKey.equals(authHeader)) {
+                                   @RequestHeader(value = "Authorization",required = false) String authHeader) {
+        if(authHeader != null) {
+            authHeader = authHeader.replace("Apikey ", "");
+        }
+        if (apiKey.equals("") || apiKey.equals(authHeader)) {
             transactionService.receiveTransaction(request);
-        }else {
+        } else {
             throw new RuntimeException("Unauthorized");
         }
     }

@@ -41,7 +41,7 @@ public class TextToSpeechServiceImpl implements TextToSpeechService {
                 .build();
 
         AudioConfig audioConfig = AudioConfig.newBuilder()
-                .setAudioEncoding(AudioEncoding.LINEAR16)
+                .setAudioEncoding(AudioEncoding.MP3)
                 .build();
 
         SynthesizeSpeechResponse response = ttsClient.synthesizeSpeech(input, voice, audioConfig);

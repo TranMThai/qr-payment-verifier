@@ -7,10 +7,11 @@ const useSocket = () => {
         topic: string,
         action: (message: any) => void
     ) => {
-        const socket = new SockJS(endpoint, null, {});
+        console.log(endpoint);
+        
         const stompClient = new Client({
-            webSocketFactory: () => socket,
-            reconnectDelay: 2000,
+            brokerURL: endpoint,
+            reconnectDelay: 2000
         });
 
         stompClient.onConnect = () => {
