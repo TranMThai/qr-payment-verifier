@@ -73,7 +73,7 @@ function App() {
     const start = new Date()
     //
     const money = (Math.floor(Math.random() * 100000) + 1) * 1000;
-    const blob = await callSpeak(`Bạn đã nhận được ${money} đồng`)
+    const blob: Blob = await callSpeak(`Bạn đã nhận được ${money} đồng`)
     const base64 = await convertBlobToBase64(blob)
     toast.success(`Đã nhận được ${money.toLocaleString("vi-VN")}đ`)
     const transaction: Transaction = { id: `${Math.floor(Math.random() * 1000) + 1}`, amountIn: money, speech: base64 + "", transactionDate: new Date() }

@@ -1,5 +1,6 @@
 package com.qrpaymentverifier.controller;
 
+import com.qrpaymentverifier.annotation.SkipWrap;
 import com.qrpaymentverifier.service.TextToSpeechService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +20,7 @@ public class TTSController {
     private final TextToSpeechService ttsService;
 
     @GetMapping("")
+    @SkipWrap
     public ResponseEntity<byte[]> speak(@RequestParam(name = "text") String text) throws Exception {
         byte[] audioBytes = ttsService.synthesizeToBytes(text);
 

@@ -4,10 +4,13 @@ import com.qrpaymentverifier.config.TransactionSyncScheduler;
 import com.qrpaymentverifier.dto.response.BankAccountResponse;
 import com.qrpaymentverifier.dto.response.SePayBankAccountResponse;
 import com.qrpaymentverifier.dto.response.SePayTransactionResponse;
+import com.qrpaymentverifier.exception.AppException;
+import com.qrpaymentverifier.exception.ErrorCode;
 import com.qrpaymentverifier.mapper.BankAccountMapper;
 import com.qrpaymentverifier.repository.TransactionRepository;
 import com.qrpaymentverifier.repository.httpclient.SePayClient;
 import com.qrpaymentverifier.service.SePayService;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +28,7 @@ import java.util.Optional;
 @Slf4j
 public class SepayServiceImpl implements SePayService {
 
-    @Value("${sepay.token}")
+    @Value("Bearer ${sepay.token}")
     private String sePayToken;
     private final SePayClient sePayClient;
     private final TransactionRepository transactionRepository;
@@ -46,29 +49,38 @@ public class SepayServiceImpl implements SePayService {
 
     @Override
     public BankAccountResponse getBankAccount() {
-        Map<String,String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("limit", "1");
         TransactionSyncScheduler.stopScheduled();
         List<SePayBankAccountResponse> bankAccounts = null;
-        for(int i = 1; i<=5; i++){
-            try{
-                bankAccounts = sePayClient.getBankAccountList(sePayToken,params).getBankaccounts();
-            }
-            catch (Exception e){
-                log.warn("Retry request api");
-            }
-            if(bankAccounts != null) {
-                break;
-            }
+        for (int i = 1; i <= 5; i++) {
             try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                //TODO: throw exception
+                bankAccounts = sePayClient.getBankAccountList(sePayToken, params).getBankaccounts();
+                if (bankAccounts != null) {
+                    break;
+                }
+            } catch (FeignException e) {
+                if (e.status() == 401) {
+                    throw new AppException(ErrorCode.SEPAY_TOKEN_INVALID);
+                }
+                if (e.status() == 429) {
+                    log.info("Too many request");
+                    try {
+                        Thread.sleep(500);
+                        if(i < 5) {
+                            continue;
+                        }
+                        throw new AppException(ErrorCode.SEPAY_SERVICE_TOO_MANY_REQUEST);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        throw new RuntimeException(ie);
+                    }
+                }
             }
         }
         TransactionSyncScheduler.continueScheduled();
-        if(bankAccounts == null || bankAccounts.isEmpty()) {
-            //TODO: throw exception
+        if (bankAccounts == null || bankAccounts.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND_BANK_ACCOUNT);
         }
         return BankAccountMapper.toBankAccountResponse(bankAccounts.getFirst());
     }

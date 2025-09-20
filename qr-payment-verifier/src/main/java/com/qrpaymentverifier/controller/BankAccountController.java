@@ -1,5 +1,6 @@
 package com.qrpaymentverifier.controller;
 
+import com.qrpaymentverifier.dto.response.ApiResponse;
 import com.qrpaymentverifier.dto.response.BankAccountResponse;
 import com.qrpaymentverifier.entity.Transaction;
 import com.qrpaymentverifier.service.SePayService;

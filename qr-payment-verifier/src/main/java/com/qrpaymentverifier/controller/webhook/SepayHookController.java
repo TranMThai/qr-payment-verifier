@@ -1,6 +1,8 @@
 package com.qrpaymentverifier.controller.webhook;
 
 import com.qrpaymentverifier.dto.request.SepayTransactionRequest;
+import com.qrpaymentverifier.exception.AppException;
+import com.qrpaymentverifier.exception.ErrorCode;
 import com.qrpaymentverifier.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +31,7 @@ public class SepayHookController {
         if (apiKey.equals("") || apiKey.equals(authHeader)) {
             transactionService.receiveTransaction(request);
         } else {
-            throw new RuntimeException("Unauthorized");
+            throw new AppException(ErrorCode.UNAUTHORIZED);
         }
     }
 
