@@ -44,8 +44,9 @@ const useTTS = () => {
         audio.src = audioUrl
         await playPrefixSound()
         audio.play();
-        await waitForAudioToEnd(audio)
-        URL.revokeObjectURL(audioUrl)
+        setTimeout(() => {
+            URL.revokeObjectURL(audioUrl)
+        }, 500)
         return audio
     }
 

@@ -1,12 +1,11 @@
 package com.qrpaymentverifier.service.impl;
 
 import com.qrpaymentverifier.dto.request.SepayTransactionRequest;
-import com.qrpaymentverifier.dto.response.SePayTransactionResponse;
+import com.qrpaymentverifier.dto.request.TransactionListRequest;
 import com.qrpaymentverifier.dto.response.TransactionResponse;
 import com.qrpaymentverifier.entity.Transaction;
 import com.qrpaymentverifier.mapper.TransactionMapper;
 import com.qrpaymentverifier.repository.TransactionRepository;
-import com.qrpaymentverifier.repository.httpclient.SePayClient;
 import com.qrpaymentverifier.service.SePayService;
 import com.qrpaymentverifier.service.TextToSpeechService;
 import com.qrpaymentverifier.service.TransactionService;
@@ -14,15 +13,14 @@ import com.qrpaymentverifier.service.WebSocketService;
 import com.qrpaymentverifier.util.MoneyUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +43,7 @@ public class TransactionServiceImpl implements TransactionService {
         List<Transaction> transactions = newSePayTransaction.stream()
                 .filter(transaction ->
                         !transactionRepository.existsById(transaction.getId())
-                        && transaction.getAmountIn().compareTo(BigDecimal.ZERO) > 0
+                                && transaction.getAmountIn().compareTo(BigDecimal.ZERO) > 0
                 )
                 .toList();
 
@@ -53,7 +51,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(this::toResponse)
                 .toList();
 
-        if(!responses.isEmpty()) {
+        if (!responses.isEmpty()) {
             webSocketService.responseRealtime(responses);
         }
 
@@ -95,6 +93,15 @@ public class TransactionServiceImpl implements TransactionService {
 
         transactionRepository.save(transaction);
         webSocketService.responseRealtime(List.of(toResponse(transaction)));
+    }
+
+    @Override
+    public List<TransactionResponse> getTransactionList(TransactionListRequest request) {
+        Pageable pageable = PageRequest.ofSize(request.getSize());
+        List<Transaction> transactions = transactionRepository.getTransactionsByDate(request.getDate(), pageable);
+        return transactions.stream()
+                .map(entity -> TransactionMapper.toDto(entity, null))
+                .toList();
     }
 
     private TransactionResponse toResponse(Transaction entity) {

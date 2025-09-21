@@ -15,6 +15,7 @@ function App() {
   const [pendingNotifyTransactions, setPendingNotifyTransactions] = useState<Transaction[]>([]);
   const [historyTransactions, setHistoryTransactions] = useState<Transaction[]>([]);
   const [isClicked, setIsClicked] = useState(false);
+  const [soundReady, setSoundReady] = useState(true)
 
   useEffect(() => {
     const action = (message: any) => {
@@ -56,15 +57,17 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (pendingNotifyTransactions.length) {
+    if (pendingNotifyTransactions.length && soundReady) {
       speakPendingTransactions()
     }
-  }, [pendingNotifyTransactions])
+  }, [pendingNotifyTransactions, soundReady])
 
   const speakPendingTransactions = async () => {
     const notifyingTransaction: Transaction = pendingNotifyTransactions[0]
     const audio = await speakByBase64(notifyingTransaction.speech || "")
+    setSoundReady(false)
     await waitForAudioToEnd(audio)
+    setSoundReady(true)
     setPendingNotifyTransactions(prev => prev.filter(transaction => transaction.id !== notifyingTransaction.id))
   }
 
