@@ -8,15 +8,23 @@ const useTTS = () => {
 
     const [audio, _] = useState<HTMLAudioElement>(new Audio())
     const [prefixSound, setPrefixSound] = useState<HTMLAudioElement | null>(null)
+    const [soundReady, setSoundReady] = useState<boolean>(true)
 
     useEffect(() => {
         audio.onpause = () => { }
     }, [])
 
     const waitForAudioToEnd = (audio: HTMLAudioElement): Promise<void> => {
+        setSoundReady(false)
         return new Promise((resolve) => {
-            audio.onended = () => resolve();
-            audio.onerror = () => resolve();
+            audio.onended = () => {
+                setSoundReady(true)
+                resolve()
+            };
+            audio.onerror = () => {
+                setSoundReady(true)
+                resolve()
+            };
         });
     };
 
@@ -62,7 +70,7 @@ const useTTS = () => {
         return audio
     }
 
-    return { audio, speak, speakByBase64, waitForAudioToEnd }
+    return { audio, speak, speakByBase64, waitForAudioToEnd, soundReady }
 }
 
 export default useTTS
