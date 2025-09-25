@@ -1,12 +1,13 @@
 package com.qrpaymentverifier.repository;
 
 import com.qrpaymentverifier.entity.Transaction;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,4 +29,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
                 ORDER BY t.transactionDate DESC
             """)
     List<Transaction> getTransactionsByDate(LocalDateTime date, Pageable pageable);
+
+    @Query("""
+    SELECT SUM(t.amountIn)
+    FROM Transaction t
+    WHERE FUNCTION('DATE', t.transactionDate) = :date
+    """)
+    BigDecimal getRevenueDaily(LocalDate date);
 }

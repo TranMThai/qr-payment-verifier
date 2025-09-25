@@ -1,7 +1,6 @@
 package com.qrpaymentverifier.service.impl;
 
 import com.qrpaymentverifier.dto.request.SepayTransactionRequest;
-import com.qrpaymentverifier.dto.request.TransactionListRequest;
 import com.qrpaymentverifier.dto.response.TransactionResponse;
 import com.qrpaymentverifier.entity.Transaction;
 import com.qrpaymentverifier.mapper.TransactionMapper;
@@ -18,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
@@ -34,7 +34,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
 
     @Override
-    public List<Transaction> syncTransactions() {
+    public List<Transaction> syncTransactions(boolean sendSocket) {
 
         List<Transaction> newSePayTransaction = sePayService.getSepayTransactions().stream()
                 .map(TransactionMapper::toEntity)
@@ -51,7 +51,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(this::toResponse)
                 .toList();
 
-        if (!responses.isEmpty()) {
+        if (!responses.isEmpty() && sendSocket) {
             webSocketService.responseRealtime(responses);
         }
 
@@ -96,12 +96,23 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionResponse> getTransactionList(TransactionListRequest request) {
-        Pageable pageable = PageRequest.ofSize(request.getSize());
-        List<Transaction> transactions = transactionRepository.getTransactionsByDate(request.getDate(), pageable);
+    public List<TransactionResponse> getTransactionList(LocalDateTime date, Integer size) {
+        Pageable pageable = PageRequest.ofSize(size);
+        List<Transaction> transactions = transactionRepository.getTransactionsByDate(date, pageable);
         return transactions.stream()
                 .map(entity -> TransactionMapper.toDto(entity, null))
                 .toList();
+    }
+
+    @Override
+    public Number getRevenueDaily() {
+        LocalDate date = LocalDate.now();
+        LocalDate yesterday = date.minusDays(1);
+        BigDecimal money = transactionRepository.getRevenueDaily(yesterday);
+        if (money == null) {
+            return 0;
+        }
+        return MoneyUtils.normalizeDecimal(money);
     }
 
     private TransactionResponse toResponse(Transaction entity) {

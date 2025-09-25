@@ -30,8 +30,13 @@ QR Payment Verifier là một dự án lấy cảm hứng từ các thiết bị
 - Truy cập [Sepay Webhook Doc](https://docs.sepay.vn/tich-hop-webhooks.html) và làm theo 4 bước đăng ký webhook
 - Điền URL vừa tạo ở Ngrok và sửa lại thành `https://<yourdomain>.ngrok-free.app/api/hooks/sepay-payment`
 
-### 4. Cấu hình file `application.properties`
-- Mở file `application.properties`
+### 4. Đăng ký SMTP gmail để thông báo doanh thu ngày (KHÔNG BẮT BUỘC)
+- Tạo tài khoản Gmail hoặc dùng tài khoản hiện có.
+- Bật **2FA** và tạo **App password**:
+- Cấu hình thông tin SMTP mail trong `application.yml`
+
+### 5. Cấu hình file `application.yml`
+- Mở file `application.yml`
 - Sửa thông tin kêt nối MySQL và Token API của SePay
 
 

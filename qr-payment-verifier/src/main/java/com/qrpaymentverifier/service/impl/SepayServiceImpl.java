@@ -1,6 +1,6 @@
 package com.qrpaymentverifier.service.impl;
 
-import com.qrpaymentverifier.config.TransactionSyncScheduler;
+import com.qrpaymentverifier.scheduler.TransactionSyncScheduler;
 import com.qrpaymentverifier.dto.response.BankAccountResponse;
 import com.qrpaymentverifier.dto.response.SePayBankAccountResponse;
 import com.qrpaymentverifier.dto.response.SePayTransactionResponse;

@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: qr-payment-verifier
+
+  servlet:
+    context-path: /api
+
+  datasource:
+    # Thong tin ket noi MySql
+    url: jdbc:mysql://localhost:3306/qr_payment_verifier
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # Thong tin mail se thong bao doanh thu (KHONG BAT BUOC)
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+server:
+  port: 8080
+
+
+ngrok:
+  # Url Ngrok (Nhap neu muon dung webhook - KHONG BAT BUOC)
+  # NEU NHAP thi se lay du lieu Sepay qua webhook
+  # (KHUYEN KHICH DUNG vi API Sepay KHONG ON DINH hay bi MANY REQUEST)
+  # NEU KHONG NHAP thi se su dung Scheduler call API Sepay moi 3 giay
+  url:
+
+
+sepay:
+  # Token API cua Sepay
+  token:
+  # Api key neu su dung webhook(KHONG BAT BUOC)
+  api-key: 
+
+
+# Cau hinh duong dan den credentials TTS
+google:
+  tts:
+    credentials:
+      path: classpath:credentials/tts-credentials.json

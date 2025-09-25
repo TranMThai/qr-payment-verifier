@@ -1,5 +1,6 @@
-package com.qrpaymentverifier.config;
+package com.qrpaymentverifier.scheduler;
 
+import com.qrpaymentverifier.config.condition.NgrokCondition;
 import com.qrpaymentverifier.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Conditional;
@@ -20,7 +21,7 @@ public class TransactionSyncScheduler {
             Thread.sleep(1000);
             return;
         }
-        transactionService.syncTransactions();
+        transactionService.syncTransactions(true);
     }
 
     public static void stopScheduled() {
