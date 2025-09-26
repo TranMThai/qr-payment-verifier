@@ -2,9 +2,6 @@ spring:
   application:
     name: qr-payment-verifier
 
-  servlet:
-    context-path: /api
-
   datasource:
     # Thong tin ket noi MySql
     url: jdbc:mysql://localhost:3306/qr_payment_verifier
@@ -16,8 +13,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username:
-    password:
+    username: 
+    password: 
     properties:
       mail:
         smtp:
@@ -29,18 +26,21 @@ spring:
 server:
   port: 8080
 
+  servlet:
+    context-path: /api
+
 
 ngrok:
   # Url Ngrok (Nhap neu muon dung webhook - KHONG BAT BUOC)
   # NEU NHAP thi se lay du lieu Sepay qua webhook
   # (KHUYEN KHICH DUNG vi API Sepay KHONG ON DINH hay bi MANY REQUEST)
   # NEU KHONG NHAP thi se su dung Scheduler call API Sepay moi 3 giay
-  url:
+  url: 
 
 
 sepay:
   # Token API cua Sepay
-  token:
+  token: 
   # Api key neu su dung webhook(KHONG BAT BUOC)
   api-key: 
 

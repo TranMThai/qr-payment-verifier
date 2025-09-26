@@ -1,5 +1,6 @@
 package com.qrpaymentverifier.service.impl;
 
+import com.qrpaymentverifier.dto.projection.DailyRevenueProjection;
 import com.qrpaymentverifier.dto.request.SepayTransactionRequest;
 import com.qrpaymentverifier.dto.response.TransactionResponse;
 import com.qrpaymentverifier.entity.Transaction;
@@ -105,14 +106,11 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Number getRevenueDaily() {
+    public DailyRevenueProjection getRevenueDaily() {
         LocalDate date = LocalDate.now();
         LocalDate yesterday = date.minusDays(1);
-        BigDecimal money = transactionRepository.getRevenueDaily(yesterday);
-        if (money == null) {
-            return 0;
-        }
-        return MoneyUtils.normalizeDecimal(money);
+        DailyRevenueProjection dailyRevenue = transactionRepository.getRevenueDaily(yesterday);
+        return dailyRevenue;
     }
 
     private TransactionResponse toResponse(Transaction entity) {

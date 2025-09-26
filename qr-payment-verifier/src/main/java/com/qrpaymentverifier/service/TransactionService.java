@@ -1,5 +1,6 @@
 package com.qrpaymentverifier.service;
 
+import com.qrpaymentverifier.dto.projection.DailyRevenueProjection;
 import com.qrpaymentverifier.dto.request.SepayTransactionRequest;
 import com.qrpaymentverifier.dto.response.TransactionResponse;
 import com.qrpaymentverifier.entity.Transaction;
@@ -12,5 +13,5 @@ public interface TransactionService {
     void readTransactions(String id);
     void receiveTransaction(SepayTransactionRequest transactions);
     List<TransactionResponse> getTransactionList(LocalDateTime date, Integer size);
-    Number getRevenueDaily();
+    DailyRevenueProjection getRevenueDaily();
 }
